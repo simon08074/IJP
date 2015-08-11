@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta charset="utf-8" />
+
+    <script type="text/javascript">
+        function checkOn_Off(Machine_ID) { //檢查電器的開關
+            var conn, strConn, rs3;
+            conn = new ActiveXObject("ADODB.Connection");
+            strConn = "driver={SQL SERVER};server=j5envg7xw2.database.windows.net;database=Butler;uid=butler;pwd=@QWEasd123";
+            conn.open(strConn);
+            rs3.conn.Execute
+            rs3 = conn.Execute("SELECT*FROM [Butler].[Action_Information]");
+            var on_off =  new String("");
+
+
+            rs3.MoveFirst();
+            do{
+                if (rs3(7) == Machine_ID) {
+                    //on_off = rs3.on_off;
+                    //on_off = rs3(9).tostring.substr(0,1);
+                    window.alert(rs3.on_off);
+
+                }
+                rs3.MoveNext();
+            } while (!rs3.EOF)
+
+            return on_off;
+           // rs3.Close();
+            //conn.Close();
+
+        }
+    </script>
+</head>
+<body>
+    <script type="text/javascript">
+        //window.alert("1230");
+        var conn,strConn, rs;
+        conn = new ActiveXObject("ADODB.Connection");
+        strConn = "driver={SQL SERVER};server=j5envg7xw2.database.windows.net;database=Butler;uid=butler;pwd=@QWEasd123";
+        conn.open(strConn);
+        rs = conn.Execute("SELECT*FROM [Association_T_M]");
+        rs2 = conn.Execute("SELECT*FROM [Butler].[Machine]");
+
+        var on_off = ""; //紀錄電器開關的變數
+        //for (var i = 0; i <= (rs.Fields.Count - 1) ; i++) {
+            document.write(rs(0).Name);
+        //}
+            rs.MoveFirst();
+            rs2.MoveFirst();
+
+        do{
+
+            document.write("<TR/>" + rs(0) + "\n ");
+            var hour = Math.floor(rs(0) / 3600);
+            var minute = Math.floor((rs(0) - (hour * 3600)) / 60);
+            var sec = rs(0) - (hour * 3600) - (minute * 60);
+            var trigerTime = (hour.toString() + ':' + minute.toString() + ':' + sec.toString());
+            //window.alert("trigerTime = " + trigerTime);
+            var nowDate = new Date();
+            var nowHr = nowDate.getHours();
+            var nowMin = nowDate.getMinutes();
+            var nowSec = nowDate.getSeconds();
+            var nowTime = (nowHr.toString() + ':' + nowMin.toString() + ':' + nowSec.toString());
+            //window.alert("nowTime = " + nowTime);
+            if(nowTime==trigerTime & parseFloat(rs(2))>0.05){ //若現在時間和觸發時間相同，則紀錄該機器相關資訊
+                var Action_time = nowTime;
+                var Machine_ID = rs(1);
+                var Possibility = rs(2);
+
+            }
+            var test = "M0004"
+            on_off = checkOn_Off(test);
+            window.alert(on_off);
+
+
+            rs.MoveNext();
+        }while(!rs.EOF);
+        rs.Close();
+        conn.Close();
+    </script>
+</body>
+</html>
